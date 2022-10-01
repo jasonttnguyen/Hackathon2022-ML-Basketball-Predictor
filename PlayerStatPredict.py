@@ -1,4 +1,5 @@
 from audioop import avg
+from click import prompt
 import sklearn
 import numpy
 import pandas
@@ -17,7 +18,7 @@ playerData = playerData[playerData["MP"].str.contains("Did Not Play") == False]
 playerData = playerData[playerData["MP"].str.contains("Did Not Dress") == False]
 playerData = playerData[playerData["FT%"].str.contains("NaN") == False]  #need to shift the games played/rnk down
 
-playerData = playerData[["MP","FG","FGA","3P","3PA","FT","FTA","ORB","DRB","TRB","AST","STL","BLK","TOV","PF","PTS","+/-"]]
+playerData = playerData[["MP","FG","FGA","3P","3PA","FT","FTA","TRB","AST","STL","BLK","TOV","PTS","+/-"]]
 
 def seconder(x):  #get seconds for minutes played
 	mins, secs = map(float, x.split(':'))
@@ -40,29 +41,19 @@ linear = linear_model.LinearRegression()  #choosing linear regression as all sta
 linear.fit(x_train,y_train)  #fit model with the training data
 accu = linear.score(x_test,y_test)  # used to print accuracy score
 print("The accuracy is: "+ str(accu))
+print(x_test[1])
+print(x_test[1][1])
 
-#["MP","FG","FGA","FG%","3P","3PA","3P%","FT","FTA","FT%","ORB","DRB","TRB","AST","STL","BLK","TOV","PF","PTS","+/-"]
-avgMP=playerData["MP"].mean()
-avgFG=playerData["FG"].mean()
-avgFGA=playerData["FGA"].mean()
-avg3P=playerData["3P"].mean()
-avg3PA=playerData["3PA"].mean()
-avgFT=playerData["FT"].mean()
-avgFTA=playerData["FTA"].mean()
-avgORB=playerData["ORB"].mean()
-avgDRB=playerData["DRB"].mean()
-avgTRB=playerData["TRB"].mean()
-avgAST=playerData["AST"].mean()
-avgSTL=playerData["STL"].mean()
-avgBLK=playerData["BLK"].mean()
-avgTOV=playerData["TOV"].mean()
-avgPF=playerData["PF"].mean()
-avgPTS=playerData["PTS"].mean()
-avgPM=playerData["+/-"].sum()
 
-averageStat = pandas.DataFrame({"MP":[avgMP],"FG":[avgFG],"FGA":[avgFGA],"3P":[avg3P],"3PA":[avg3PA],"FT":[avgFT],"FTA":[avgFTA],"ORB":[avgORB],"DRB":[avgDRB],"TRB":[avgTRB],"AST":[avgAST],"STL":[avgSTL],"BLK":[avgBLK],"TOV":[avgTOV],"PF":[avgPF],"PTS":[avgPTS],"+/-":[avgPM]})
+predictions = linear.predict(x_test)  #predict using x_test, which is randomized by sklearn
+print("\n Given that in a certain game, player achieves the following stats: ")
+print("MP: " + str(x_test[1][0]) + " FG: " + str(x_test[1][1]) + " FGA:" + str(x_test[1][2]) + " 3P: " + str(x_test[1][3]) + " 3PA: " + str(x_test[1][4]))
+print("FT: " + str(x_test[1][5]) + " FTA: " + str(x_test[1][6]) + " TRB: " + str(x_test[1][7]))
+print("AST: " + str(x_test[1][8]) + " STL: " + str(x_test[1][9]) + " BLK:" + str(x_test[1][10]) + " TOV: " + str(x_test[1][11]))
+print("+/-: " + str(x_test[1][12]) )
+userGuess=input("What do you think the player's point score is?: ")
+print("The machine learning model predicted: " + str(predictions[1]))
+print("The actual point score is: " + y_test[1])
 
-print(averageStat)
-#predictions = linear.predict(x_test)  #predict using x_test, which is randomized by sklearn
 #for i in range(len(predictions)):
-#    print(predictions[i],x_test[i],y_test[i])
+#  print(predictions[i],x_test[i],y_test[i])
