@@ -38,7 +38,7 @@ else:
 	playerName = "Vanvleet"
 	choice="vanvleet2021.csv"
 
-print("\nChosen player: " + playerName)
+print("Chosen player: " + playerName)
 
 playerData = pandas.read_csv(choice) #insert player csv file here, make sure path is correct. 
 
